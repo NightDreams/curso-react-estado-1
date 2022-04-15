@@ -12,17 +12,15 @@ export const UseState = ({ name }) => {
   useEffect(() => {
     console.log("Empezando el efecto");
     if (!!loading) {
-      // emulate backend response
       setError(false);
+      // emulate backend response
       setTimeout(() => {
         console.log("Haciendo la validación");
         //check security code
-        if (value === SEGURITY_CODE) {
-          setLoading(false);
-        } else {
-          setLoading(false);
+        if (value !== SEGURITY_CODE) {
           setError(true);
         }
+        setLoading(false)
         console.log("Terminando la validación");
       }, 3000);
     }
