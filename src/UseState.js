@@ -13,13 +13,16 @@ export const UseState = ({ name }) => {
     console.log("Empezando el efecto");
     if (!!loading) {
       // emulate backend response
+      setError(false);
       setTimeout(() => {
         console.log("Haciendo la validación");
         //check security code
-        if (value !== SEGURITY_CODE) {
+        if (value === SEGURITY_CODE) {
+          setLoading(false);
+        } else {
+          setLoading(false);
           setError(true);
         }
-        setLoading(false);
         console.log("Terminando la validación");
       }, 3000);
     }
@@ -30,15 +33,18 @@ export const UseState = ({ name }) => {
     <div>
       <h2>Eliminar {name}</h2>
       <p>por favor, escribe el codigo de seguridad </p>
-      {error && <p> Error: el código es incorrecto</p>}
+      {(error && !loading) && (
+        <p> Error: el código es incorrecto</p>
+      )}
       {loading && <p>Cargando... </p>}
 
       <input
         type="text"
         placeholder="Código de seguridad"
+        value={value}
         onChange={({ target: { value } }) => {
           setValue(value);
-          setError(false);
+          // setError(false);
         }}
       />
       <button
@@ -49,6 +55,6 @@ export const UseState = ({ name }) => {
       >
         Comprobar
       </button>
-    </div>
+    </div >
   );
 };
