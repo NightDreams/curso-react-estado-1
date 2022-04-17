@@ -11,7 +11,24 @@ export const UseState = ({ name }) => {
     confirmed: false,
   });
 
-  console.log(state);
+  const onConfirm = () => {
+    setState({ ...state, error: false, loading: false, confirmed: true });
+  };
+  const onError = () => {
+    setState({ ...state, error: true, loading: false });
+  };
+  const onWrite = (newValue) => {
+    setState({ ...state, value: newValue });
+  };
+  const onCheck = () => {
+    setState({ ...state, loading: true });
+  };
+  const onDelete = () => {
+    setState({ ...state, deleted: true });
+  };
+  const onReset = () => {
+    setState({ ...state, confirmed: false, deleted: false, value: "" });
+  };
 
   useEffect(() => {
     console.log("Empezando el efecto");
@@ -21,9 +38,9 @@ export const UseState = ({ name }) => {
         console.log("Haciendo la validación");
         //check security code
         if (state.value === SEGURITY_CODE) {
-          setState({ ...state, error: false, loading: false, confirmed: true });
+          onConfirm();
         } else {
-          setState({ ...state, error: true, loading: false });
+          onError();
         }
 
         console.log("Terminando la validación");
@@ -47,12 +64,12 @@ export const UseState = ({ name }) => {
           placeholder="Código de seguridad"
           value={state.value}
           onChange={({ target: { value } }) => {
-            setState({ ...state, value: value });
+            onWrite(value);
           }}
         />
         <button
           onClick={() => {
-            setState({ ...state, loading: true });
+            onCheck();
           }}
         >
           Comprobar
@@ -62,18 +79,18 @@ export const UseState = ({ name }) => {
   } else if (!!state.confirmed && !state.deleted) {
     return (
       <>
-        <p>Pedimos configimacion ¿Estás seguro?</p>
+        <p>Pedimos confirmación ¿Estás seguro?</p>
         <button
           // Reegresar a la pantalla anterior.
           onClick={() => {
-            setState({ ...state, deleted: true });
+            onDelete();
           }}
         >
           Sí, eliminar
         </button>
         <button
           onClick={() => {
-            setState({ ...state, confirmed: false, value: "" });
+            onReset();
           }}
         >
           No, me arrepenti
@@ -87,7 +104,7 @@ export const UseState = ({ name }) => {
         <button
           // Reegresar a la pantalla anterior.
           onClick={() => {
-            setState({ ...state, confirmed: false, deleted: false, value: "" });
+            onReset();
           }}
         >
           Resetear, Volver atrás
